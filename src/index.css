@@ -11,3 +11,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.single_product{
+  align-items: center;
+}
+
+.single_product img{
+  width: 150px;
+  height: 200px;
+  object-fit: contain;
+}
