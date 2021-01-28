@@ -8,8 +8,8 @@ export const HomePage = () => {
   const [ products, setProducts ] = useState(null)
 
   useEffect(() => {
-    const getcategory = async () => {
-      Axios({
+    const getCategory = async () => {
+      await Axios({
         method: 'GET',
         url: `${ domain }/api/product/`
       }).then(response =>{
@@ -17,11 +17,29 @@ export const HomePage = () => {
         setProducts(response.data)
       })
     }
-    getcategory()
+    getCategory()
   }, [])
 
+  const beforeProduct = async () =>{
+    await Axios({
+      method: "GET",
+      url: products?.previous
+    }).then(response => {
+      setProducts(response.data)
+    })
+  }
+
+  const nextProduct = async () =>{
+    await Axios({
+      method: "GET",
+      url: products?.next
+    }).then(response => {
+      setProducts(response.data)
+    })
+  }
+
   return (
-    <div className="container-fluid">
+    <div className="container">
       <div className="row">
         <div className="col-md-9">
           <div className="row">
@@ -37,6 +55,27 @@ export const HomePage = () => {
         </div>
         <div className="col-md-3">
 
+        </div>
+      </div>
+
+      <div className="home__pagination">
+        <div className="">
+          {
+            products?.previous != null ? (
+              <button onClick={beforeProduct} className="btn btn-white"> before </button>
+            ):(
+              <button className="btn btn-white" disabled> before </button>
+            )
+          }
+        </div>
+        <div className="">
+          {
+            products?.next != null ? (
+              <button onClick={nextProduct} className="btn btn-white"> next </button>
+            ):(
+              <button className="btn btn-white" disabled> next </button>
+            )
+          }
         </div>
       </div>
     </div>

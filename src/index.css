@@ -21,3 +21,10 @@ code {
   height: 200px;
   object-fit: contain;
 }
+
+.home__pagination{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 20px;
+}
