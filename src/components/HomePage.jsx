@@ -1,20 +1,33 @@
 import Axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { domain } from '../env'
 import SingleProduct from './SingleProduct'
 
 export const HomePage = () => {
 
   const [ products, setProducts ] = useState(null)
+  const [ category, setCategory ] = useState(null)
+
+  useEffect(() => {
+    const getProduct = async () => {
+      await Axios({
+        method: 'GET',
+        url: `${ domain }/api/product/`
+      }).then(response =>{
+        setProducts(response.data)
+      })
+    }
+    getProduct()
+  }, [])
 
   useEffect(() => {
     const getCategory = async () => {
       await Axios({
         method: 'GET',
-        url: `${ domain }/api/product/`
-      }).then(response =>{
-        console.log(response.data)
-        setProducts(response.data)
+        url: `${ domain }/api/categori/`
+      }).then(response => {
+        setCategory(response.data)
       })
     }
     getCategory()
@@ -54,7 +67,15 @@ export const HomePage = () => {
           </div>
         </div>
         <div className="col-md-3">
-
+            <h1>Category</h1>
+            {
+              category !== null &&
+              category?.map((category,index) =>(
+                <div className="my-2" key={index}>
+                  <Link to={`/category/${category.id}/`}> {category.title}</Link>
+                </div>
+              ))
+            }
         </div>
       </div>
 

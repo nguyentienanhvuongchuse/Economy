@@ -1,4 +1,6 @@
 from rest_framework import views,viewsets,generics,mixins
+from rest_framework.response import Response
+
 from .models import *
 from .serializers import *
 # Create your views here.
@@ -13,3 +15,20 @@ class ProductView(generics.GenericAPIView,mixins.ListModelMixin,mixins.RetrieveM
             return self.retrieve(request)
         else:
             return self.list(request)
+
+class CategoryView(viewsets.ViewSet):
+    def list(self, request):
+        query = Category.objects.all()
+        serializers = CategorySerializers(query, many=True)
+        return Response(serializers.data)
+
+    def retrieve(self, request, pk=None):
+        query = Category.objects.get(id=pk)
+        serializers = CategorySerializers(query)
+        data_data = serializers.data
+        all_data = []
+        category_product = Product.objects.filter(category_id = data_data['id'])
+        category_product_serializers = ProductSerializers(category_product, many=True)
+        data_data['category_product'] = category_product_serializers.data
+        all_data.append(data_data)
+        return Response(all_data)
