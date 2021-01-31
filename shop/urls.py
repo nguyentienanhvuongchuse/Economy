@@ -9,5 +9,5 @@ urlpatterns = [
 	path("", include(route.urls)),
 	path("product/",ProductView.as_view(),name="product"),
 	path("product/<int:id>/",ProductView.as_view(),name="product-detail"),
-
+	path("profile/",ProfileView.as_view(),name="profile"),
 ]

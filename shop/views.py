@@ -1,5 +1,7 @@
 from rest_framework import views,viewsets,generics,mixins
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 
 from .models import *
 from .serializers import *
@@ -32,3 +34,15 @@ class CategoryView(viewsets.ViewSet):
         data_data['category_product'] = category_product_serializers.data
         all_data.append(data_data)
         return Response(all_data)
+
+class ProfileView(views.APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated, ]
+    def get(self, request):
+        try:
+            query = Profile.objects.get(prouser=request.user)
+            serializers = ProfileSeralizers(query)
+            response_msg = {"error":False, "data":serializers.data}
+        except:
+            response_msg = {"error":True, "message":"Something is wrong"}
+        return Response(response_msg)

@@ -28,3 +28,8 @@ code {
   justify-content: space-between;
   padding: 20px;
 }
+
+.account-img{
+  width: 125px;
+  height: 125px;
+}
