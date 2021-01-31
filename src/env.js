@@ -3,6 +3,13 @@ import Cookies from 'js-cookie';
 
 
 export const domain = "http://127.0.0.1:8000";
+export const userToken = window.localStorage.getItem('token')
+export const header = {
+    Authorization: `token ${userToken}`
+}
+
+
+
 // export const domain = "";
 
 /*
@@ -11,12 +18,10 @@ export const domain = "http://127.0.0.1:8000";
     window.localStorage.clear();
     window.localStorage.getItem("token");
 */
-const token = "536e3d52053354c37f7cfa519069e331e1e96f37"
-export const header = {
-    Authorization: `token ${token}`
-}
+// const token = "536e3d52053354c37f7cfa519069e331e1e96f37"
+
 const csrftoken = Cookies.get('csrftoken')
 export const header2 = {
-    Authorization: `token ${token}`,
+    Authorization: `token ${userToken}`,
     'X-CSRFToken': csrftoken,
 }
