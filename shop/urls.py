@@ -10,4 +10,6 @@ urlpatterns = [
 	path("product/",ProductView.as_view(),name="product"),
 	path("product/<int:id>/",ProductView.as_view(),name="product-detail"),
 	path("profile/",ProfileView.as_view(),name="profile"),
+	path("updateprofile/", UserProfile.as_view(), name="update_profile"),
+	path("updateimg/", UpdateImage.as_view(), name="update_img")
 ]

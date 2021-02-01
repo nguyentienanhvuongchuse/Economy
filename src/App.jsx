@@ -12,7 +12,7 @@ import { domain, userToken, header } from './env'
 import { useGlobalState } from './state/provider'
 
 const App = () => {
-  const [{ profile }, dispath] = useGlobalState()
+  const [{ profile, pagereload }, dispath] = useGlobalState()
   console.log(profile)
   useEffect(() => {
     if(userToken !== null){
@@ -30,7 +30,7 @@ const App = () => {
       }
       getData()
     }
-  }, [])
+  }, [pagereload])
 
 
   return(

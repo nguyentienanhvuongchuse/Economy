@@ -24,7 +24,7 @@ class ProfileSeralizers(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = "__all__"
-        reed_only_field = ["prouser"]
+        read_only_fields = ["prouser"]
     def validate(self, attrs):
         attrs["prouser"] = self.context["request"].user
         return attrs
