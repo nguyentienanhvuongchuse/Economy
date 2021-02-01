@@ -1,5 +1,6 @@
 export const initialstate = {
   profile: null,
+  pagereload: null,
 }
 
 const reducer = (state, action) => {
@@ -8,6 +9,12 @@ const reducer = (state, action) => {
       return {
         ...state,
         profile: action.profile
+      }
+
+    case 'PAGE_RELOAD':
+      return {
+        ...state,
+        pagereload: action.pagereload
       }
 
     default:

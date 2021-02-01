@@ -2,6 +2,7 @@ from rest_framework import views,viewsets,generics,mixins
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
+from django.contrib.auth.models import User
 
 from .models import *
 from .serializers import *
@@ -45,4 +46,37 @@ class ProfileView(views.APIView):
             response_msg = {"error":False, "data":serializers.data}
         except:
             response_msg = {"error":True, "message":"Something is wrong"}
+        return Response(response_msg)
+
+class UserProfile(views.APIView):
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated, ]
+    def post(self, request):
+        try:
+            user = request.user
+            data = request.data
+            user_obj = User.objects.get(username=user)
+            user_obj.first_name = data["first_name"]
+            user_obj.last_name = data["last_name"]
+            user_obj.email = data["email"]
+            user_obj.save()
+            response_msg = {"error":False, "message":"Updated"}
+        except:
+            response_msg = {"error":True, "message":"Try again !!"}
+        return Response(response_msg)
+
+class UpdateImage(views.APIView):
+    authentication_classes = [TokenAuthentication,]
+    permission_classes = [IsAuthenticated, ]
+    def post(self, request):
+        try:
+            user = request.user
+            query = Profile.objects.get(prouser=user)
+            data = request.data
+            serializers = ProfileSeralizers(query, data=data, context = {"request":request})
+            serializers.is_valid(raise_exception=True)
+            serializers.save()
+            response_msg = {"message":"Updated"}
+        except:
+            response_msg = {"message":"Try again !!"}
         return Response(response_msg)
