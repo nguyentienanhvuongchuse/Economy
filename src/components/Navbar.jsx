@@ -4,7 +4,14 @@ import { useGlobalState } from '../state/provider'
 
 
 function Navbar() {
-  const [{ profile }, {}] = useGlobalState()
+  const [{ profile, cartuncomplit }, {}] = useGlobalState()
+  let cart_product_length = 0
+  if(cartuncomplit !== null){
+    cart_product_length = cartuncomplit?.cartproduct?.length
+  }
+  else{
+    cart_product_length = 0
+  }
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
@@ -27,6 +34,10 @@ function Navbar() {
 
                 <li className="nav-item">
                   <Link className="nav-link" to="/profile">Profile</Link>
+                </li>
+
+                <li className="nav-item">
+                  <Link className="nav-link" to="/cart">Cart({cart_product_length})</Link>
                 </li>
                 </>
               )

@@ -80,3 +80,17 @@ class UpdateImage(views.APIView):
         except:
             response_msg = {"message":"Try again !!"}
         return Response(response_msg)
+
+class MyCart(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated, ]
+    authentication_classes = [TokenAuthentication, ]
+    def list(self, request):
+        query = Cart.objects.filter(customer=request.user.profile)
+        serializers = CartSerializers(query, many=True)
+        all_data = []
+        for cart in serializers.data:
+            cart_product = CartProduct.objects.filter(cart=cart["id"])
+            cart_product_serializers = CartProductSerializers(cart_product, many=True)
+            cart["cartproduct"] = cart_product_serializers.data
+            all_data.append(cart)
+        return Response(all_data)

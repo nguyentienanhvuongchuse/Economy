@@ -14,7 +14,6 @@ export const CategoryProducts = () => {
         method: 'GET',
         url: `${ domain }/api/categori/${id}/`
       }).then(response => {
-        console.log(response.data[0])
         setCategory(response.data[0])
       })
     }

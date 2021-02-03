@@ -16,7 +16,6 @@ export const LoginPage = () => {
         'password':password
       }
     }).then(response =>{
-      console.log(response.data)
       window.localStorage.setItem('token', response.data['token'])
     }).catch(_ => {
       alert("Cannot invalid, try again")

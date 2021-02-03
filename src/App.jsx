@@ -1,6 +1,7 @@
 import Axios from 'axios'
 import React, { useEffect } from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import Cart from './components/Cart'
 import { CategoryProducts } from './components/CategoryProducts'
 import { HomePage } from './components/HomePage'
 import { LoginPage } from './components/LoginPage'
@@ -12,8 +13,10 @@ import { domain, userToken, header } from './env'
 import { useGlobalState } from './state/provider'
 
 const App = () => {
-  const [{ profile, pagereload }, dispath] = useGlobalState()
-  console.log(profile)
+  const [{ profile, pagereload, cartcomplit, cartuncomplit }, dispath] = useGlobalState()
+  console.log(cartcomplit)
+  console.log(cartuncomplit)
+
   useEffect(() => {
     if(userToken !== null){
       const getData = async () => {
@@ -32,6 +35,36 @@ const App = () => {
     }
   }, [pagereload])
 
+  useEffect(() =>  {
+    const getCart = async () => {
+      await Axios({
+        method: "GET",
+        url: `${domain}/api/cart/`,
+        headers: header
+      }).then(response => {
+        console.log(response.data)
+        {
+          const all_data = []
+          response?.data.map( data => {
+            if(data.complit){
+              all_data.push(data)
+              dispath({
+                type: 'ADD_CARTCOMPLIT',
+                cartcomplit: all_data
+              })
+            }
+            else{
+              dispath({
+                type: 'ADD_CARTUNCOMPLIT',
+                cartuncomplit: data
+              })
+            }
+          })
+        }
+      })
+    }
+    getCart()
+  },[])
 
   return(
     <div>
@@ -41,9 +74,19 @@ const App = () => {
           <Route exact path="/" component={HomePage}/>
           <Route exact path="/product/:id" component={ProductsDetails}/>
           <Route exact path="/category/:id" component={CategoryProducts}/>
-          <Route exact path="/login" component={LoginPage}/>
-          <Route exact path="/register" component={RegisterPage}/>
-          <Route exact path="/profile" component={ProfilePage}/>
+          {
+            profile !== null ? (
+              <>
+                <Route exact path="/cart" component={Cart}/>
+                <Route exact path="/profile" component={ProfilePage}/>
+              </>
+              ):(
+                <>
+                  <Route exact path="/register" component={RegisterPage}/>
+                  <Route exact path="/login" component={LoginPage}/>
+                </>
+            )
+          }
           <Route exact component={HomePage}/>
         </Switch>
       </BrowserRouter>

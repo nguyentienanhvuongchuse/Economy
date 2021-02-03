@@ -32,3 +32,14 @@ class ProfileSeralizers(serializers.ModelSerializer):
         response = super().to_representation(instance)
         response["prouser"] = UserSerializer(instance.prouser).data
         return response
+
+class CartSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Cart
+        fields = "__all__"
+
+class CartProductSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = CartProduct
+        fields = "__all__"
+        depth = 1

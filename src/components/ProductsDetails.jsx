@@ -28,7 +28,6 @@ export const ProductsDetails = () => {
       method: "GET",
       url: `${ domain }/api/categori/${id}/`
     }).then(response => {
-      console.log(response.data)
       setCategoryproduct(response.data)
     })
   }
