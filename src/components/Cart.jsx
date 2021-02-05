@@ -1,6 +1,6 @@
 import React from 'react'
 import { useGlobalState } from '../state/provider'
-
+import { Link } from 'react-router-dom'
 
 const Cart = () => {
   const [{ cartuncomplit }, {}] = useGlobalState()
@@ -33,10 +33,22 @@ const Cart = () => {
                   <td>{data.price}</td>
                   <td>{data.quantity}</td>
                   <td>{data.subtotal}</td>
+                  <td>
+                    <button className="btn btn-info">-</button>
+                    <button className="btn btn-danger mx-1">x</button>
+                    <button className="btn btn-info">+</button>
+                  </td>
                 </tr>
               ))
             }
           </tbody>
+          <tfoot>
+            <tr>
+              <th colSpan="4" className="text-right">Total: </th>
+              <th>{cartuncomplit?.total}</th>
+              <th><Link className="btn btn-secondary" to="/order">Order Now</Link></th>
+            </tr>
+          </tfoot>
         </table>
         :
         (
@@ -45,6 +57,17 @@ const Cart = () => {
         </div>
         )
       }
+      <div className="row">
+        <div className="col">
+          <Link className="btn btn-info" to="/oldorder">Old Orders</Link>
+        </div>
+        {
+          cart_product_length !== 0 &&
+          <div className="col">
+            <Link className="btn btn-danger">Delete Cart</Link>
+          </div>
+        }
+      </div>
     </div>
   )
 }

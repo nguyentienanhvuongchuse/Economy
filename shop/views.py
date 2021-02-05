@@ -94,3 +94,32 @@ class MyCart(viewsets.ViewSet):
             cart["cartproduct"] = cart_product_serializers.data
             all_data.append(cart)
         return Response(all_data)
+
+class OldOrders(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated, ]
+    authentication_classes = [TokenAuthentication, ]
+    def list(self, request):
+        query = Order.objects.filter(cart__customer=request.user.profile)
+        serializers = OrderSerializers(query, many=True)
+        all_data = []
+        for order in serializers.data:
+            cart_product = CartProduct.objects.filter(cart_id = order["cart"]["id"])
+            cart_product_serialzers = CartProductSerializers(cart_product, many=True)
+            order["cartproduct"] = cart_product_serialzers.data
+            all_data.append(order)
+        return Response(all_data)
+
+    def retrieve(self, request, pk=None):
+        try:
+            query = Order.objects.get(id=pk)
+            serializers = OrderSerializers(query)
+            data = serializers.data
+            all_data = []
+            cart_product = CartProduct.objects.filter(cart_id = data["cart"]["id"])
+            cart_product_serializer = CartProductSerializers(cart_product, many=True)
+            data["cartproduct"] = cart_product_serializer.data
+            all_data.append(data)
+            response_msg = {"error": False, "data": all_data}
+        except:
+            response_msg = {"error": True, "message":"Fail"}
+        return Response(response_msg)
