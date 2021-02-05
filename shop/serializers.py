@@ -43,3 +43,9 @@ class CartProductSerializers(serializers.ModelSerializer):
         model = CartProduct
         fields = "__all__"
         depth = 1
+
+class OrderSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = "__all__"
+        depth = 1

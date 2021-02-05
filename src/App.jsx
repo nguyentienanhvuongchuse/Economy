@@ -6,6 +6,9 @@ import { CategoryProducts } from './components/CategoryProducts'
 import { HomePage } from './components/HomePage'
 import { LoginPage } from './components/LoginPage'
 import Navbar from './components/Navbar'
+import OldOrders from './components/OldOrders'
+import Order from './components/Order'
+import OrderDetails from './components/OrderDetails'
 import { ProductsDetails } from './components/ProductsDetails'
 import { ProfilePage } from './components/ProfilePage'
 import RegisterPage from './components/RegisterPage'
@@ -14,8 +17,6 @@ import { useGlobalState } from './state/provider'
 
 const App = () => {
   const [{ profile, pagereload, cartcomplit, cartuncomplit }, dispath] = useGlobalState()
-  console.log(cartcomplit)
-  console.log(cartuncomplit)
 
   useEffect(() => {
     if(userToken !== null){
@@ -42,7 +43,6 @@ const App = () => {
         url: `${domain}/api/cart/`,
         headers: header
       }).then(response => {
-        console.log(response.data)
         {
           const all_data = []
           response?.data.map( data => {
@@ -79,6 +79,9 @@ const App = () => {
               <>
                 <Route exact path="/cart" component={Cart}/>
                 <Route exact path="/profile" component={ProfilePage}/>
+                <Route exact path="/oldorder" component={OldOrders}/>
+                <Route exact path="/order" component={Order}/>
+                <Route exact path="/orderdetail/:id" component={OrderDetails}/>
               </>
               ):(
                 <>
