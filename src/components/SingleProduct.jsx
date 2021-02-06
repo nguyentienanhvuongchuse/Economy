@@ -1,7 +1,25 @@
+import Axios from 'axios'
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { domain, header } from '../env'
+import { useGlobalState } from '../state/provider'
 
 function SingleProduct({item}) {
+  const [{ }, dispath] = useGlobalState()
+  const addToCart = async (id) => {
+    await Axios({
+      method: 'POST',
+      url: `${ domain }/api/addtocart/`,
+      data: {'id':id},
+      headers: header
+    }).then(response => {
+      console.log(response.data)
+      dispath({
+        type: 'PAGE_RELOAD',
+        pagereload: response.data
+      })
+    })
+  }
   return (
     <div className="card single_product">
       <Link to={`/product/${item.id}`}>
@@ -13,7 +31,7 @@ function SingleProduct({item}) {
           {(item.description).substring(0,50)}
           ... <Link>read more</Link>
         </p>
-        <a href="#" className="btn btn-primary">Add</a>
+        <button onClick={() => addToCart(item.id)} className="btn btn-primary">Add</button>
       </div>
       <div className="card-footer">
         <h5>Price: <del>{item.market_price}</del> {item.selling_price}</h5>

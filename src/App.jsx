@@ -64,7 +64,7 @@ const App = () => {
       })
     }
     getCart()
-  },[])
+  },[pagereload])
 
   return(
     <div>
