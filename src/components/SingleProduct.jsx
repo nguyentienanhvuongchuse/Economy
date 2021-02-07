@@ -1,12 +1,15 @@
 import Axios from 'axios'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { domain, header } from '../env'
 import { useGlobalState } from '../state/provider'
 
 function SingleProduct({item}) {
-  const [{ }, dispath] = useGlobalState()
+  const [{ profile }, dispath] = useGlobalState()
+  const history = useHistory()
+
   const addToCart = async (id) => {
+    profile !== null ? (
     await Axios({
       method: 'POST',
       url: `${ domain }/api/addtocart/`,
@@ -19,6 +22,10 @@ function SingleProduct({item}) {
         pagereload: response.data
       })
     })
+    ):
+    (
+      history.push('/login')
+    )
   }
   return (
     <div className="card single_product">

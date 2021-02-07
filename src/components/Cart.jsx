@@ -1,9 +1,11 @@
 import React from 'react'
 import { useGlobalState } from '../state/provider'
 import { Link } from 'react-router-dom'
+import Axios from 'axios'
+import { domain, header } from '../env'
 
 const Cart = () => {
-  const [{ cartuncomplit }, {}] = useGlobalState()
+  const [{ cartuncomplit }, dispath] = useGlobalState()
   let cart_product_length = 0
   if(cartuncomplit !== null){
     cart_product_length = cartuncomplit?.cartproduct?.length
@@ -11,6 +13,49 @@ const Cart = () => {
   else{
     cart_product_length = 0
   }
+
+  const upCart = async (id) =>{
+    await Axios({
+      method: 'POST',
+      url: `${ domain }/api/upincart/`,
+      data: {'id':id},
+      headers: header
+    }).then(response => {
+      dispath({
+        type: 'PAGE_RELOAD',
+        pagereload: response.data
+      })
+    })
+  }
+
+  const downCart = async (id) =>{
+    await Axios({
+      method: 'POST',
+      url: `${ domain }/api/downincart/`,
+      data: {'id':id},
+      headers: header
+    }).then(response => {
+      dispath({
+        type: 'PAGE_RELOAD',
+        pagereload: response.data
+      })
+    })
+  }
+
+  const deleteCart = async (id) =>{
+    await Axios({
+      method: 'POST',
+      url: `${ domain }/api/deleteincart/`,
+      data: {'id':id},
+      headers: header
+    }).then(response => {
+      dispath({
+        type: 'PAGE_RELOAD',
+        pagereload: response.data
+      })
+    })
+  }
+
   return (
     <div className="container p-2">
       {
@@ -34,9 +79,9 @@ const Cart = () => {
                   <td>{data.quantity}</td>
                   <td>{data.subtotal}</td>
                   <td>
-                    <button className="btn btn-info">-</button>
-                    <button className="btn btn-danger mx-1">x</button>
-                    <button className="btn btn-info">+</button>
+                    <button onClick={() => downCart(data.id)} className="btn btn-info">-</button>
+                    <button onClick={() => deleteCart(data.id)} className="btn btn-danger mx-1">x</button>
+                    <button onClick={() => upCart(data.id)} className="btn btn-info">+</button>
                   </td>
                 </tr>
               ))

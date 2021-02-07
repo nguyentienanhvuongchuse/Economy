@@ -168,3 +168,46 @@ class AddToCart(views.APIView):
         except:
             response_msg = {"error": True, "data": "fail"}
         return Response(response_msg)
+
+class UpInCart(views.APIView):
+    permission_classes = [IsAuthenticated, ]
+    authentication_classes = [TokenAuthentication, ]
+    def post(self, request):
+        cart_product_id = request.data["id"]
+        cart_product = CartProduct.objects.get(id=cart_product_id)
+        cart_obj = cart_product.cart
+
+        cart_product.quantity += 1
+        cart_product.subtotal += cart_product.price
+        cart_product.save()
+
+        cart_obj.total += cart_product.price
+        cart_obj.save()
+        return Response({"message":"success"})
+
+class DownInCart(views.APIView):
+    permission_classes = [IsAuthenticated, ]
+    authentication_classes = [TokenAuthentication, ]
+    def post(self, request):
+        cart_product_id = request.data["id"]
+        cart_product = CartProduct.objects.get(id=cart_product_id)
+        cart_obj = cart_product.cart
+
+        if(cart_product.quantity > 0):
+            cart_product.quantity -= 1
+            cart_product.subtotal -= cart_product.price
+            cart_product.save()
+
+            cart_obj.total -= cart_product.price
+            cart_obj.save()
+
+        return Response({"message":"success"})
+
+class DeleteInCart(views.APIView):
+    permission_classes = [IsAuthenticated, ]
+    authentication_classes = [TokenAuthentication, ]
+    def post(self, request):
+        cart_product_id = request.data["id"]
+        cart_product = CartProduct.objects.get(id=cart_product_id)
+        cart_product.delete()
+        return Response({"message":"success"})

@@ -1,14 +1,17 @@
 import Axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { domain } from '../env'
 import  SingleProduct from './SingleProduct'
+import { useGlobalState } from '../state/provider'
 
 export const ProductsDetails = () => {
 
   const { id } = useParams()
   const [ product, setProduct] = useState(null)
   const [categoryproduct, setCategoryproduct] = useState(null)
+  const [{ profile, header }, dispath] = useGlobalState()
+  const history = useHistory()
 
   useEffect(() => {
     const getProduct = async () => {
@@ -32,6 +35,27 @@ export const ProductsDetails = () => {
     })
   }
 
+
+  const addToCart = async (id) => {
+    profile !== null ? (
+    await Axios({
+      method: 'POST',
+      url: `${ domain }/api/addtocart/`,
+      data: {'id':id},
+      headers: header
+    }).then(response => {
+      console.log(response.data)
+      dispath({
+        type: 'PAGE_RELOAD',
+        pagereload: response.data
+      })
+    })
+    ):
+    (
+      history.push('/login')
+    )
+  }
+
   return (
     <div className="container">
       {
@@ -46,7 +70,7 @@ export const ProductsDetails = () => {
               </h2>
             </div>
             <div className="col-md-5">
-              <button className="btn btn-info">Addtocart</button>
+              <button onClick={() => addToCart(product?.id)} className="btn btn-info">Addtocart</button>
             </div>
             <div className="">
               {product?.description}

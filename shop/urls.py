@@ -14,5 +14,8 @@ urlpatterns = [
 	path("profile/",ProfileView.as_view(),name="profile"),
 	path("updateprofile/", UserProfile.as_view(), name="update_profile"),
 	path("updateimg/", UpdateImage.as_view(), name="update_img"),
-	path("addtocart/", AddToCart.as_view(), name="add_cart")
+	path("addtocart/", AddToCart.as_view(), name="add_cart"),
+	path("upincart/",UpInCart.as_view(), name="up"),
+	path("downincart/",DownInCart.as_view(), name="down"),
+	path("deleteincart/", DeleteInCart.as_view(), name="delete")
 ]

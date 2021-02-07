@@ -4,7 +4,7 @@ import { useGlobalState } from '../state/provider'
 
 
 function Navbar() {
-  const [{ profile, cartuncomplit }, {}] = useGlobalState()
+  const [{ profile, cartuncomplit }, dispatch] = useGlobalState()
   let cart_product_length = 0
   if(cartuncomplit !== null){
     cart_product_length = cartuncomplit?.cartproduct?.length
@@ -12,6 +12,16 @@ function Navbar() {
   else{
     cart_product_length = 0
   }
+
+  const logout = () =>{
+    window.localStorage.clear()
+    dispatch({
+      type: 'ADD_PROFILE',
+      profile: null
+    })
+    window.location.href = '/'
+  }
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
@@ -29,7 +39,7 @@ function Navbar() {
               (
                 <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="#">Logout</Link>
+                  <Link onClick={logout} className="nav-link" to="">Logout</Link>
                 </li>
 
                 <li className="nav-item">

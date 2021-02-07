@@ -17,6 +17,7 @@ export const LoginPage = () => {
       }
     }).then(response =>{
       window.localStorage.setItem('token', response.data['token'])
+      window.location.href = '/'
     }).catch(_ => {
       alert("Cannot invalid, try again")
     })
