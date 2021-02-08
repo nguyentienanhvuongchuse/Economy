@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom'
 
 const OldOrders = () => {
   const [orders, setOrders] = useState(null)
+  const [reload, setReload] = useState(null)
+
   useEffect(() => {
     const getOrder = async () => {
       await Axios({
@@ -17,7 +19,18 @@ const OldOrders = () => {
       })
     }
     getOrder()
-  },[])
+  },[reload])
+
+  const deleteHistory = async (id) => {
+    await Axios({
+      method: 'DELETE',
+      url: `${ domain }/api/orders/${id}/`,
+      headers: header
+    }).then(response =>{
+      setReload(response)
+    })
+  }
+
   return (
     <div className="container">
       <h1>Order History</h1>
@@ -45,7 +58,7 @@ const OldOrders = () => {
                   <Link className="btn btn-info" to={`orderdetail/${order?.id}`}>Details</Link>
                 </td>
                 <td>
-                  <button className="btn btn-danger">Delete</button>
+                  <button onClick={()=> deleteHistory(order?.id)} className="btn btn-danger">Delete</button>
                 </td>
               </tr>
             )):

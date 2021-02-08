@@ -124,6 +124,41 @@ class OldOrders(viewsets.ViewSet):
             response_msg = {"error": True, "message":"Fail"}
         return Response(response_msg)
 
+    def create(self, request):
+        try:
+            data = request.data
+            cart_id = data["cartid"]
+            address = data["address"]
+            email = data["email"]
+            mobile = data["mobile"]
+            cart = Cart.objects.get(id=cart_id)
+            cart.complit = True
+            cart.save()
+            Order.objects.create(
+                cart = cart,
+                address = address,
+                mobile = mobile,
+                email = email,
+                total = cart.total,
+                discount = 3
+            )
+            response_msg = {"error": False, "data": "success"}
+        except:
+            response_msg = {"error": True, "data": "fail"}
+        return Response(response_msg)
+
+    def delete(self, request, pk=None):
+        try:
+            order = Order.objects.get(id=pk)
+            cart = Cart.objects.get(id=order.cart.id)
+            order.delete()
+            cart.delete()
+            response_msg = {"error": False, "data": "success"}
+        except:
+            response_msg = {"error": True, "data": "fail"}
+        return Response(response_msg)
+
+
 class AddToCart(views.APIView):
     permission_classes = [IsAuthenticated, ]
     authentication_classes = [TokenAuthentication, ]
@@ -211,3 +246,16 @@ class DeleteInCart(views.APIView):
         cart_product = CartProduct.objects.get(id=cart_product_id)
         cart_product.delete()
         return Response({"message":"success"})
+
+class DeleteFullCart(views.APIView):
+    permission_classes = [IsAuthenticated, ]
+    authentication_classes = [TokenAuthentication, ]
+    def post(self, request):
+        try:
+            cart_id = request.data["id"]
+            cart_obj = Cart.objects.get(id=cart_id)
+            cart_obj.delete()
+            response_msg = {"error": False, "data": "success"}
+        except:
+            response_msg = {"error": True, "data": "Fail"}
+        return Response(response_msg)

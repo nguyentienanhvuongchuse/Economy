@@ -1,11 +1,13 @@
 import React from 'react'
 import { useGlobalState } from '../state/provider'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import Axios from 'axios'
 import { domain, header } from '../env'
 
 const Cart = () => {
   const [{ cartuncomplit }, dispath] = useGlobalState()
+  const history = useHistory()
+
   let cart_product_length = 0
   if(cartuncomplit !== null){
     cart_product_length = cartuncomplit?.cartproduct?.length
@@ -53,6 +55,26 @@ const Cart = () => {
         type: 'PAGE_RELOAD',
         pagereload: response.data
       })
+    })
+  }
+
+  const deleteFullCart = async (id) => {
+    await Axios({
+      method: "POST",
+      url: `${ domain }/api/deletefullcart/`,
+      data: {'id':id},
+      headers: header
+    }).then(response => {
+      dispath({
+        type: 'PAGE_RELOAD',
+        pagereload: response.data
+      })
+      dispath({
+        type: 'ADD_CARTUNCOMPLIT',
+        cartuncomplit: null
+      })
+      alert("Deleted all product in your cart")
+      history.push('/cart')
     })
   }
 
@@ -109,7 +131,7 @@ const Cart = () => {
         {
           cart_product_length !== 0 &&
           <div className="col">
-            <Link className="btn btn-danger">Delete Cart</Link>
+            <Link onClick={() => deleteFullCart(cartuncomplit?.id)} className="btn btn-danger">Delete Cart</Link>
           </div>
         }
       </div>

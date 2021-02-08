@@ -17,5 +17,7 @@ urlpatterns = [
 	path("addtocart/", AddToCart.as_view(), name="add_cart"),
 	path("upincart/",UpInCart.as_view(), name="up"),
 	path("downincart/",DownInCart.as_view(), name="down"),
-	path("deleteincart/", DeleteInCart.as_view(), name="delete")
+	path("deleteincart/", DeleteInCart.as_view(), name="delete"),
+	path("deletefullcart/", DeleteFullCart.as_view(),name="deletefullcart"),
+
 ]
